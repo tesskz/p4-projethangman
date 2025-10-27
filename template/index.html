@@ -1,0 +1,88 @@
+{{/* template/index.html */}}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Puissance 4 (Go)</title>
+  <style>
+    :root { --bg:#0f172a; --text:#e5e7eb; --accent:#38bdf8; --p1:#ef4444; --p2:#facc15; }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0b1022,#0f172a 35%);color:var(--text)}
+    header,footer{max-width:920px;margin:0 auto;padding:16px} header{display:flex;align-items:center;justify-content:space-between}
+    .btn{background:var(--accent);color:#001018;border:none;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600;cursor:pointer;margin-right:8px}
+    .btn.secondary{background:#334155;color:var(--text)} .btn.outline{background:transparent;border:1px solid #64748b;color:var(--text)}
+    .status{max-width:920px;margin:12px auto;padding:0 16px;display:flex;align-items:center;gap:12px}
+    .flash{max-width:920px;margin:0 auto 12px;padding:10px 12px;background:#1f2937;border:1px solid #374151;border-radius:8px}
+    .banner{max-width:920px;margin:8px auto;padding:10px 12px;background:#0b3b53;border:1px solid #164e63;border-radius:8px;color:#e0f2fe}
+    .boardwrap{max-width:920px;margin:0 auto;padding:0 16px}
+    table.board{border-collapse:separate;border-spacing:8px;margin:0 auto;background:#1f2937;padding:12px;border-radius:12px;box-shadow:inset 0 0 0 2px #374151}
+    .drop{width:44px;height:32px;border-radius:6px;border:1px solid #334155;background:#0ea5e9;color:#fff;font-weight:700;cursor:pointer}
+    .cell{width:44px;height:44px;background:#0b1324;border-radius:8px;display:grid;place-items:center}
+    .disc{width:36px;height:36px;border-radius:50%;border:3px solid #0b1324;box-shadow:0 1px 0 #0008,inset 0 2px 4px #0006}
+    .disc.empty{background:#0b1324;border-color:#0b1324;box-shadow:inset 0 0 0 2px #1f2937}
+    .disc.p1{background:var(--p1)} .disc.p2{background:var(--p2)} .disc.small{width:14px;height:14px;border-width:2px}
+    .disc.last{outline:2px solid #22c55e;outline-offset:2px}
+    nav a{margin-right:8px}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Puissance 4</h1>
+    <nav>
+      <a class="btn" href="/new">Nouvelle partie</a>
+      <a class="btn secondary" href="/scoreboard">Scoreboard</a>
+      <form action="/save" method="post" style="display:inline">
+        <button class="btn outline" type="submit">Sauvegarder</button>
+      </form>
+    </nav>
+  </header>
+
+  {{if and .HasSave (eq .Game.Status "ongoing")}}
+  <div class="banner">Une sauvegarde a été trouvée. <a href="/resume">Reprendre</a> ou <a href="/new">Commencer une nouvelle partie</a> ?</div>
+  {{end}}
+
+  <section class="status">
+    {{if eq .Game.Status "ongoing"}}
+      <div>Tour : <span class="disc small {{if eq .Game.CurrentPlayer 1}}p1{{else}}p2{{end}}"></span> Joueur {{.Game.CurrentPlayer}}</div>
+    {{else if eq .Game.Status "win"}}
+      <div>🎉 Victoire du Joueur {{.Game.Winner}} ! <a class="btn" href="/new">Rejouer</a></div>
+    {{else}}
+      <div>🤝 Match nul. <a class="btn" href="/new">Rejouer</a></div>
+    {{end}}
+  </section>
+
+  {{if .Game.Flash}}
+  <div class="flash">{{.Game.Flash}}</div>
+  {{end}}
+
+  <section class="boardwrap">
+    <form method="post" action="/play">
+      <table class="board">
+        <thead>
+          <tr>
+            {{range $c := seq 0 6}}
+              <th><button class="drop" name="col" value="{{$c}}" {{if ne $.Game.Status "ongoing"}}disabled{{end}}>▼</button></th>
+            {{end}}
+          </tr>
+        </thead>
+        <tbody>
+          {{range $r, $row := .Game.Board}}
+            <tr>
+              {{range $c, $cell := $row}}
+                <td>
+                  <div class="cell">
+                    <div class="disc {{cellClass $cell}} {{if isLast $.Game.LastMove $r $c}}last{{end}}"></div>
+                  </div>
+                </td>
+              {{end}}
+            </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </form>
+  </section>
+
+  <footer><small>TP Puissance 4 – Abdel, Ranya & Lina</small></footer>
+
+</body>
+</html>
