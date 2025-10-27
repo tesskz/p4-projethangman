@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tableau des scores – Puissance 4</title>
+  <style>
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:#0f172a;color:#e5e7eb}
+    main,header,footer{max-width:920px;margin:0 auto;padding:16px}
+    .btn{background:#38bdf8;color:#001018;border:none;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600}
+    table{width:100%;border-collapse:collapse;margin-top:16px}
+    th,td{border-bottom:1px solid #334155;padding:8px 10px;text-align:left}
+    .disc{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:6px}
+    .p1{background:#ef4444}.p2{background:#facc15}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tableau des scores</h1>
+    <nav><a class="btn" href="/">Retour au jeu</a></nav>
+  </header>
+  <main>
+    <table>
+      <thead><tr><th>Joueur</th><th>Couleur</th><th>Victoires</th></tr></thead>
+      <tbody>
+        <tr><td>Joueur 1</td><td><span class="disc p1"></span>Rouge</td><td>{{.Scores.Player1}}</td></tr>
+        <tr><td>Joueur 2</td><td><span class="disc p2"></span>Jaune</td><td>{{.Scores.Player2}}</td></tr>
+      </tbody>
+    </table>
+  </main>
+  <footer><small>Tableau des scores</small></footer>
+</body>
+</html>
